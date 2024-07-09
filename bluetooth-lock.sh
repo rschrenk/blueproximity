@@ -11,11 +11,11 @@ if [ "$BT_DEVICE" == "00:00:00:00:00:00" ]; then
     exit 0
 fi
 
+AUTOSTART_DIR="$HOME/.config/autostart"
 DESKTOP_FILE="$AUTOSTART_DIR/bluetooth-lock.desktop"
 
 if [ "$1" == "--install" ]; then
     SCRIPT_PATH=$(readlink -f "$0")
-    AUTOSTART_DIR="$HOME/.config/autostart"
 
     # Autostart-Verzeichnis erstellen, falls nicht vorhanden
     mkdir -p "$AUTOSTART_DIR"
