@@ -5,6 +5,9 @@ This tool is inspired by the blueproximity-project that is outdated since many y
 to determine the device name based on the bluetooth mac address of a device. If the device is not present, it locks
 the screen. Once the device is present again, the screen is unlocked again.
 
+However, the main drawback is, that this script does not allow to analyze the strength of the signal. As long as the
+device name can be retrieved, the device is accepted as being present.
+
 ## Installation
 
 Please adapt the location of the script to your needs, if desired.
