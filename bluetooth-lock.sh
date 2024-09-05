@@ -19,38 +19,29 @@ if [ "${BT_DEVICE}" == "00:00:00:00:00:00" ]; then
     exit 0
 fi
 
-AUTOSTART_DIR="${HOME}/.config/autostart"
-DESKTOP_FILE="${AUTOSTART_DIR}/bluetooth-lock.sh.desktop"
+AUTOSTART_FILE="$HOME/.profile"
+SCRIPT_PATH=$(readlink -f "$0")
 TEST="0"
+
+if [ "$1" == "--install" ]; then
+    # Prüfen, ob der Autostart-Eintrag schon existiert
+    if ! grep -q "${SCRIPT_PATH}" "${AUTOSTART_FILE}"; then
+        echo "Install ${SCRIPT_PATH} to ${AUTOSTART_FILE}"
+        echo "bash $SCRIPT_PATH" >> "$AUTOSTART_FILE"
+    else
+        echo "${SCRIPT_PATH} was already installed to ${AUTOSTART_FILE}"
+    fi
+    exit 0
+fi
+
+if ! grep -q "${SCRIPT_PATH}" "${AUTOSTART_FILE}"; then
+    echo "In order to run this script automatically on every login, please start it with the following command"
+    echo "./bluetooth-lock.sh --install"
+fi
 
 if [ "$1" == "--test" ]; then
     echo "TEST MODE"
     TEST="1"
-fi
-
-if [ "$1" == "--install" ]; then
-    SCRIPT_PATH=$(readlink -f "$0")
-
-    # Autostart-Verzeichnis erstellen, falls nicht vorhanden
-    mkdir -p "${AUTOSTART_DIR}"
-
-    # Inhalt der .desktop-Datei
-    unlink "${DESKTOP_FILE}"
-    echo "[Desktop Entry]" > ${DESKTOP_FILE}
-    echo "Type=Application" >> ${DESKTOP_FILE}
-    echo "Exec=\"${SCRIPT_PATH}\"" >> ${DESKTOP_FILE}
-    echo "Hidden=false" >> ${DESKTOP_FILE}
-    echo "NoDisplay=false" >> ${DESKTOP_FILE}
-    echo "X-GNOME-Autostart-enabled=true" >> ${DESKTOP_FILE}
-    echo "Name=Bluetooth Check" >> ${DESKTOP_FILE}
-    echo "X-GNOME-Autostart-Delay=10" >> ${DESKTOP_FILE}
-    echo "Comment=Checks Bluetooth device and logs out if not found" >> ${DESKTOP_FILE}
-    echo "Installed an autostart-file to ${DESKTOP_FILE}"
-fi
-
-if [ ! -f "${DESKTOP_FILE}" ]; then
-    echo "In order to run this script automatically on every login, please start it with the following command"
-    echo "./bluetooth-lock.sh --install"
 fi
 
 while true; do
